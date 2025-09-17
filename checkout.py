@@ -7,23 +7,33 @@ class PaymentMode(Enum):
     CREDITCARD = 3
     UNKNOWN = 99
 
+# Handlers for each payment mode
+def process_paypal(amount: float):
+    print(f"Processing PayPal payment of ${amount:.2f}")
+    # Add PayPal-specific logic here
+
+def process_googlepay(amount: float):
+    print(f"Processing GooglePay payment of ${amount:.2f}")
+    # Add GooglePay-specific logic here
+
+def process_creditcard(amount: float):
+    print(f"Processing Credit Card payment of ${amount:.2f}")
+    # Add Credit Card-specific logic here
+
+# Dispatch table mapping enum -> handler
+PAYMENT_HANDLERS = {
+    PaymentMode.PAYPAL: process_paypal,
+    PaymentMode.GOOGLEPAY: process_googlepay,
+    PaymentMode.CREDITCARD: process_creditcard,
+}
+
 # Checkout function
 def checkout(mode: PaymentMode, amount: float):
-    match mode:
-        case PaymentMode.PAYPAL:
-            print(f"Processing PayPal payment of ${amount:.2f}")
-            # Add PayPal-specific logic here
-
-        case PaymentMode.GOOGLEPAY:
-            print(f"Processing GooglePay payment of ${amount:.2f}")
-            # Add GooglePay-specific logic here
-
-        case PaymentMode.CREDITCARD:
-            print(f"Processing Credit Card payment of ${amount:.2f}")
-            # Add Credit Card-specific logic here
-
-        case _:
-            print("Invalid payment mode selected!")
+    handler = PAYMENT_HANDLERS.get(mode)
+    if handler:
+        handler(amount)
+    else:
+        print("Invalid payment mode selected!")
 
 # Example usage
 if __name__ == "__main__":
